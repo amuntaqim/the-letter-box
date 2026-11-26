@@ -1,0 +1,93 @@
+:root{
+  --maroon:#6d1a2a;
+  --maroon-deep:#4a0f1c;
+  --beige:#f3e7d0;
+  --paper:#f9f1df;
+  --tan:#d9c3a0;
+  --ink:#3a1018;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--beige);
+  color:var(--ink);
+  font-family:"Kohinoor Bangla","Noto Serif Bengali","Hind Siliguri",serif;
+  font-size:18px;
+  line-height:1.9;
+  /* subtle paper grain */
+  background-image:radial-gradient(rgba(109,26,42,.07) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+button,input,textarea{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--maroon);outline-offset:3px}
+
+/* Kolka (paisley) border strip */
+.kolka{
+  height:30px;
+  background-repeat:repeat-x;
+  background-position:center;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='28' viewBox='0 0 56 28'%3E%3Cg fill='none' stroke='%236d1a2a' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M10 4C20 6 22 18 14 23C8 26 3 21 5 16C6.5 12 11 13 11 16.5'/%3E%3Cpath d='M46 24C36 22 34 10 42 5C48 2 53 7 51 12C49.5 16 45 15 45 11.5'/%3E%3C/g%3E%3Cg fill='%236d1a2a'%3E%3Ccircle cx='28' cy='14' r='1.8'/%3E%3Ccircle cx='28' cy='5' r='1'/%3E%3Ccircle cx='28' cy='23' r='1'/%3E%3C/g%3E%3C/svg%3E");
+}
+.kolka.top{position:fixed;top:0;left:0;right:0;z-index:1;background-color:var(--beige)}
+.kolka.bottom{position:fixed;bottom:0;left:0;right:0;z-index:1;background-color:var(--beige);transform:scaleY(-1)}
+
+.lotus{display:block;margin:0 auto;width:120px;height:40px;color:var(--maroon)}
+
+.wrap{max-width:680px;margin:0 auto;padding:56px 20px 70px;position:relative}
+
+h1,h2{font-weight:700;color:var(--maroon);line-height:1.5;margin:0}
+
+/* Paper with a double Bengali-style frame */
+.paper{
+  position:relative;
+  background:var(--paper);
+  border:2px solid var(--maroon);
+  outline:1px solid var(--maroon);
+  outline-offset:-9px;
+  padding:30px 28px 34px;
+  box-shadow:6px 6px 0 var(--tan);
+}
+.paper .kolka{margin:0 -28px;background-color:transparent}
+.paper .kolka.flip{transform:scaleY(-1)}
+
+/* The letter text, shared between viewer and editor */
+.letter-body{font-size:1.2rem;line-height:2.1;word-break:break-word}
+.letter-body h2{text-align:center;font-size:1.6rem;margin:.4em 0}
+.letter-body p,.letter-body div{margin:0 0 .5em}
+.letter-body hr{border:0;border-top:1px dashed var(--maroon);margin:1.2em 0}
+.letter-body ul{padding-left:1.4em}
+
+.btn{
+  display:inline-block;
+  background:var(--maroon);
+  color:var(--beige);
+  border:2px solid var(--maroon);
+  padding:8px 26px;
+  cursor:pointer;
+  letter-spacing:.02em;
+  box-shadow:3px 3px 0 var(--tan);
+  transition:transform .12s, box-shadow .12s;
+}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tan)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tan)}
+.btn.ghost{background:transparent;color:var(--maroon)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+input[type=text],input[type=password],textarea{
+  width:100%;
+  background:#fffaf0;
+  border:1.5px solid var(--maroon);
+  padding:8px 12px;
+  line-height:1.8;
+}
+textarea{min-height:200px;resize:vertical}
+label{display:block;color:var(--maroon);margin:14px 0 4px}
+
+@media (max-width:520px){
+  body{font-size:17px}
+  .paper{padding:24px 18px 28px}
+  .paper .kolka{margin:0 -18px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

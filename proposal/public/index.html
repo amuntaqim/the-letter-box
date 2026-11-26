@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>একটি চিঠি</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .center{text-align:center}
+  .sub{margin:6px 0 0;color:var(--maroon);opacity:.8}
+  #postbox{
+    display:block;margin:26px auto 0;background:none;border:0;cursor:pointer;
+    width:200px;max-width:70%;padding:0;
+  }
+  #postbox svg{width:100%;height:auto;overflow:visible}
+  #postbox:hover .pb-body{filter:brightness(1.12)}
+  .hint{margin-top:8px;color:var(--maroon);animation:blink 2.4s ease-in-out infinite}
+  @keyframes blink{50%{opacity:.35}}
+  #env{transform-box:fill-box;transform-origin:center}
+  #postbox.open{animation:shake .5s}
+  #postbox.open #env{animation:rise .9s .3s forwards ease-in}
+  @keyframes shake{20%{transform:rotate(-3deg)}40%{transform:rotate(3deg)}60%{transform:rotate(-2deg)}80%{transform:rotate(2deg)}}
+  @keyframes rise{to{transform:translateY(-120px) scale(1.4);opacity:0}}
+
+  #letterScreen{display:none}
+  .letter-open{animation:unfold .7s ease-out}
+  @keyframes unfold{from{opacity:0;transform:translateY(24px) scaleY(.92)}to{opacity:1;transform:none}}
+  .sig{text-align:right;margin-top:10px;color:var(--maroon)}
+  .actions{margin-top:26px;text-align:center}
+  #replyBox{display:none;margin-top:30px}
+  #replyBox h2{font-size:1.4rem;text-align:center}
+  .msg{margin-top:14px;text-align:center;color:var(--maroon)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="lotus" viewBox="0 0 120 40">
+    <g fill="none" stroke="currentColor" stroke-width="1.5">
+      <g transform="translate(60,36)">
+        <ellipse cx="0" cy="-14" rx="5" ry="14" transform="rotate(-62)"/>
+        <ellipse cx="0" cy="-14" rx="5" ry="14" transform="rotate(-31)"/>
+        <ellipse cx="0" cy="-16" rx="5.5" ry="16"/>
+        <ellipse cx="0" cy="-14" rx="5" ry="14" transform="rotate(31)"/>
+        <ellipse cx="0" cy="-14" rx="5" ry="14" transform="rotate(62)"/>
+      </g>
+      <path d="M4 34H34M86 34H116" stroke-linecap="round"/>
+    </g>
+    <circle cx="60" cy="36" r="2" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<div class="kolka top"></div>
+<div class="kolka bottom"></div>
+
+<main class="wrap">
+  <!-- 1. Post box -->
+  <section id="landing" class="center">
+    <svg class="lotus"><use href="#lotus"/></svg>
+    <h1 style="font-size:2rem;margin-top:10px">একটি চিঠি এসেছে</h1>
+    <p class="sub">শুধু তোমার জন্য</p>
+
+    <button id="postbox" aria-label="ডাকবাক্স খুলে চিঠি পড়ো">
+      <svg viewBox="0 0 200 300" role="img" aria-hidden="true">
+        <rect x="36" y="272" width="128" height="16" fill="#4a0f1c"/>
+        <g class="pb-body">
+          <path d="M50 272V112Q50 62 100 62Q150 62 150 112V272Z" fill="#6d1a2a"/>
+          <rect x="44" y="104" width="112" height="10" rx="3" fill="#4a0f1c"/>
+          <rect x="44" y="256" width="112" height="10" rx="3" fill="#4a0f1c"/>
+        </g>
+        <circle cx="100" cy="52" r="9" fill="#4a0f1c"/>
+        <rect x="68" y="128" width="64" height="11" rx="5.5" fill="#2b0710"/>
+        <rect x="66" y="158" width="68" height="46" rx="4" fill="#f3e7d0" stroke="#4a0f1c" stroke-width="2"/>
+        <text x="100" y="190" text-anchor="middle" font-size="24" fill="#6d1a2a" font-weight="700" font-family="'Kohinoor Bangla','Noto Serif Bengali',serif">ডাক</text>
+        <g fill="#f3e7d0"><circle cx="64" cy="232" r="2.5"/><circle cx="82" cy="232" r="2.5"/><circle cx="100" cy="232" r="2.5"/><circle cx="118" cy="232" r="2.5"/><circle cx="136" cy="232" r="2.5"/></g>
+        <g id="env">
+          <rect x="74" y="96" width="52" height="34" fill="#f9f1df" stroke="#6d1a2a" stroke-width="2"/>
+          <path d="M74 96L100 118L126 96" fill="none" stroke="#6d1a2a" stroke-width="2"/>
+          <circle cx="100" cy="116" r="5" fill="#6d1a2a"/>
+        </g>
+      </svg>
+    </button>
+    <div class="hint">ডাকবাক্সটিতে ছুঁয়ে দেখো</div>
+  </section>
+
+  <!-- 2. The letter -->
+  <section id="letterScreen">
+    <article class="paper letter-open">
+      <div class="kolka"></div>
+      <div id="letterContent" class="letter-body" style="padding-top:12px"></div>
+      <svg class="lotus" style="margin-top:14px"><use href="#lotus"/></svg>
+      <div class="kolka flip" style="margin-top:14px"></div>
+    </article>
+
+    <div class="actions">
+      <button class="btn" id="replyBtn">উত্তর লিখো</button>
+    </div>
+
+    <!-- 3. Her reply -->
+    <div id="replyBox" class="paper">
+      <h2>তোমার চিঠি</h2>
+      <label for="rname">তোমার নাম (ইচ্ছে হলে)</label>
+      <input id="rname" type="text" maxlength="80" autocomplete="off">
+      <label for="rtext">মনের কথা লিখো</label>
+      <textarea id="rtext" maxlength="8000" placeholder="এখানে লিখো…"></textarea>
+      <div class="center" style="margin-top:18px">
+        <button class="btn" id="sendBtn">চিঠি পাঠাও</button>
+      </div>
+      <div class="msg" id="sendMsg" role="status"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+// Keep the letter safe: strip scripts / event handlers
+function clean(html){
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  doc.querySelectorAll("script,style,iframe,object,embed,link,meta,form").forEach(n => n.remove());
+  doc.body.querySelectorAll("*").forEach(el => {
+    [...el.attributes].forEach(a => {
+      if (/^on/i.test(a.name) || /javascript:/i.test(a.value)) el.removeAttribute(a.name);
+    });
+  });
+  return doc.body.innerHTML;
+}
+
+let letterHtml = null;
+fetch("/api/letter", {cache:"no-store"}).then(r => r.json()).then(d => { letterHtml = d.html || ""; }).catch(() => { letterHtml = ""; });
+
+$("postbox").addEventListener("click", () => {
+  const box = $("postbox");
+  if (box.classList.contains("open")) return;
+  box.classList.add("open");
+  setTimeout(() => {
+    const html = letterHtml && letterHtml.trim()
+      ? clean(letterHtml)
+      : "<p style='text-align:center'>চিঠিটা এখনও লেখা শেষ হয়নি। একটু পরে আবার এসো।</p>";
+    $("letterContent").innerHTML = html;
+    $("landing").style.display = "none";
+    $("letterScreen").style.display = "block";
+    window.scrollTo({top:0});
+  }, 1300);
+});
+
+$("replyBtn").addEventListener("click", () => {
+  $("replyBox").style.display = "block";
+  $("replyBtn").style.display = "none";
+  $("rtext").focus();
+  $("replyBox").scrollIntoView({behavior:"smooth"});
+});
+
+$("sendBtn").addEventListener("click", async () => {
+  const text = $("rtext").value.trim();
+  if (!text) { $("sendMsg").textContent = "আগে কিছু লিখো।"; return; }
+  $("sendBtn").disabled = true;
+  $("sendMsg").textContent = "পাঠানো হচ্ছে…";
+  try {
+    const r = await fetch("/api/replies", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ name: $("rname").value, text })
+    });
+    if (!r.ok) throw new Error();
+    $("sendMsg").textContent = "তোমার চিঠি পৌঁছে গেছে ♡";
+    $("rtext").value = "";
+  } catch {
+    $("sendMsg").textContent = "পাঠানো যায়নি, আবার চেষ্টা করো।";
+  }
+  $("sendBtn").disabled = false;
+});
+</script>
+</body>
+</html>

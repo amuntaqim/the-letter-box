@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>চিঠিঘর</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .tabs{display:flex;gap:10px;justify-content:center;margin:18px 0}
+  .tabs .btn{box-shadow:none}
+  .tabs .btn.on{background:var(--maroon);color:var(--beige)}
+  .tabs .btn:not(.on){background:transparent;color:var(--maroon)}
+  .toolbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;position:sticky;top:34px;z-index:2;background:var(--paper);padding:8px 0;border-bottom:1px dashed var(--maroon)}
+  .toolbar button{background:transparent;border:1.5px solid var(--maroon);color:var(--maroon);min-width:38px;height:36px;padding:0 10px;cursor:pointer;line-height:1}
+  .toolbar button:hover{background:var(--maroon);color:var(--beige)}
+  #editor{min-height:380px;outline:none;padding:6px 2px}
+  #editor:empty:before{content:attr(data-ph);color:rgba(58,16,24,.45)}
+  .status{text-align:center;margin-top:12px;color:var(--maroon);min-height:1.9em}
+  #panelReplies{display:none}
+  .reply{border:1.5px solid var(--maroon);background:#fffaf0;padding:14px 18px;margin-bottom:16px;position:relative}
+  .reply .meta{color:var(--maroon);font-size:.9rem;margin-bottom:6px}
+  .reply .body{white-space:pre-wrap;word-break:break-word}
+  .reply .del{position:absolute;top:8px;right:10px;background:none;border:0;color:var(--maroon);cursor:pointer;opacity:.6}
+  .reply .del:hover{opacity:1}
+  #login{max-width:360px;margin:60px auto;text-align:center}
+  #app{display:none}
+  .center{text-align:center}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="lotus" viewBox="0 0 120 40">
+    <g fill="none" stroke="currentColor" stroke-width="1.5">
+      <g transform="translate(60,36)">
+        <ellipse cx="0" cy="-14" rx="5" ry="14" transform="rotate(-62)"/>
+        <ellipse cx="0" cy="-14" rx="5" ry="14" transform="rotate(-31)"/>
+        <ellipse cx="0" cy="-16" rx="5.5" ry="16"/>
+        <ellipse cx="0" cy="-14" rx="5" ry="14" transform="rotate(31)"/>
+        <ellipse cx="0" cy="-14" rx="5" ry="14" transform="rotate(62)"/>
+      </g>
+      <path d="M4 34H34M86 34H116" stroke-linecap="round"/>
+    </g>
+    <circle cx="60" cy="36" r="2" fill="currentColor"/>
+  </symbol>
+</svg>
+<div class="kolka top"></div>
+<div class="kolka bottom"></div>
+
+<main class="wrap">
+  <section id="login" class="paper">
+    <svg class="lotus"><use href="#lotus"/></svg>
+    <h2 style="font-size:1.4rem">চিঠিঘর</h2>
+    <label for="pw" style="text-align:left">পাসওয়ার্ড</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <div style="margin-top:16px"><button class="btn" id="loginBtn">ভেতরে যাও</button></div>
+    <div class="status" id="loginMsg" role="status"></div>
+  </section>
+
+  <section id="app">
+    <div class="center">
+      <svg class="lotus"><use href="#lotus"/></svg>
+    </div>
+    <div class="tabs">
+      <button class="btn on" id="tabWrite">চিঠি লেখো</button>
+      <button class="btn" id="tabReplies">পাওয়া চিঠি <span id="cnt"></span></button>
+    </div>
+
+    <div id="panelWrite" class="paper">
+      <div class="toolbar" role="toolbar" aria-label="ফরম্যাট">
+        <button data-cmd="bold" title="গাঢ়"><b>B</b></button>
+        <button data-cmd="italic" title="বাঁকা"><i>I</i></button>
+        <button data-cmd="underline" title="নিচে দাগ"><u>U</u></button>
+        <button data-cmd="formatBlock" data-val="h2" title="শিরোনাম">শিরোনাম</button>
+        <button data-cmd="formatBlock" data-val="p" title="সাধারণ লেখা">সাধারণ</button>
+        <button data-cmd="justifyLeft" title="বামে">বামে</button>
+        <button data-cmd="justifyCenter" title="মাঝে">মাঝে</button>
+        <button data-cmd="justifyRight" title="ডানে">ডানে</button>
+        <button data-cmd="insertUnorderedList" title="তালিকা">• তালিকা</button>
+        <button data-cmd="insertHorizontalRule" title="দাগ">― দাগ</button>
+      </div>
+      <div id="editor" class="letter-body" contenteditable="true" data-ph="এখানে তোমার চিঠি লেখো…"></div>
+      <div class="status" id="saveMsg" role="status"></div>
+      <div class="center"><a class="btn ghost" href="/" target="_blank" rel="noopener" style="text-decoration:none">দেখে নাও</a></div>
+    </div>
+
+    <div id="panelReplies">
+      <div id="replyList"></div>
+      <div class="center"><button class="btn ghost" id="refresh">নতুন করে দেখো</button></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let PW = sessionStorage.getItem("pw") || "";
+
+const api = (path, opts = {}) => fetch(path, {
+  ...opts,
+  cache: "no-store",
+  headers: { "Content-Type": "application/json", "x-admin-password": PW, ...(opts.headers || {}) }
+});
+
+const bn = (iso) => new Date(iso).toLocaleString("bn-BD", { dateStyle: "long", timeStyle: "short" });
+
+async function enter() {
+  const r = await api("/api/replies");
+  if (r.status === 401) { PW = ""; sessionStorage.removeItem("pw"); return false; }
+  if (!r.ok) { $("loginMsg").textContent = "সার্ভারে সমস্যা হয়েছে (Redis সংযোগ ঠিক আছে তো?)"; return false; }
+  sessionStorage.setItem("pw", PW);
+  $("login").style.display = "none";
+  $("app").style.display = "block";
+  const l = await (await fetch("/api/letter", {cache:"no-store"})).json();
+  $("editor").innerHTML = l.html || "<h2>প্রিয়…</h2><p></p>";
+  if (l.updatedAt) $("saveMsg").textContent = "শেষ সংরক্ষণ: " + bn(l.updatedAt);
+  renderReplies((await r.json()).replies);
+  return true;
+}
+
+$("loginBtn").onclick = async () => {
+  PW = $("pw").value;
+  $("loginMsg").textContent = "";
+  if (!(await enter()) && !$("loginMsg").textContent) $("loginMsg").textContent = "পাসওয়ার্ড ঠিক নয়।";
+};
+$("pw").addEventListener("keydown", e => { if (e.key === "Enter") $("loginBtn").click(); });
+if (PW) enter();
+
+// Tabs
+function tab(w) {
+  $("panelWrite").style.display = w ? "block" : "none";
+  $("panelReplies").style.display = w ? "none" : "block";
+  $("tabWrite").classList.toggle("on", w);
+  $("tabReplies").classList.toggle("on", !w);
+}
+$("tabWrite").onclick = () => tab(true);
+$("tabReplies").onclick = () => { tab(false); loadReplies(); };
+$("refresh").onclick = loadReplies;
+
+// Formatting
+document.querySelectorAll(".toolbar button").forEach(b => {
+  b.addEventListener("mousedown", e => e.preventDefault());
+  b.addEventListener("click", () => {
+    $("editor").focus();
+    document.execCommand(b.dataset.cmd, false, b.dataset.val || null);
+    queueSave();
+  });
+});
+
+// Autosave
+let timer;
+function queueSave() {
+  $("saveMsg").textContent = "লেখা হচ্ছে…";
+  clearTimeout(timer);
+  timer = setTimeout(save, 1200);
+}
+async function save() {
+  try {
+    const r = await api("/api/letter", { method: "POST", body: JSON.stringify({ html: $("editor").innerHTML }) });
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    $("saveMsg").textContent = "সংরক্ষিত ✓ " + bn(d.updatedAt);
+  } catch { $("saveMsg").textContent = "সংরক্ষণ হয়নি, ইন্টারনেট দেখো।"; }
+}
+$("editor").addEventListener("input", queueSave);
+
+// Replies (rendered as plain text, never HTML)
+async function loadReplies() {
+  const r = await api("/api/replies");
+  if (r.ok) renderReplies((await r.json()).replies);
+}
+function renderReplies(list) {
+  $("cnt").textContent = list.length ? "(" + list.length.toLocaleString("bn-BD") + ")" : "";
+  const box = $("replyList");
+  box.innerHTML = "";
+  if (!list.length) {
+    const p = document.createElement("p");
+    p.className = "center";
+    p.textContent = "এখনও কোনো চিঠি আসেনি।";
+    box.appendChild(p);
+    return;
+  }
+  list.forEach(it => {
+    const d = document.createElement("div"); d.className = "reply";
+    const m = document.createElement("div"); m.className = "meta";
+    m.textContent = (it.name ? it.name + " · " : "") + bn(it.at);
+    const b = document.createElement("div"); b.className = "body"; b.textContent = it.text;
+    const x = document.createElement("button"); x.className = "del"; x.textContent = "মুছো"; x.title = "মুছে ফেলো";
+    x.onclick = async () => {
+      if (!confirm("এই চিঠিটা মুছে ফেলবে?")) return;
+      await api("/api/replies", { method: "DELETE", body: JSON.stringify({ id: it.id }) });
+      loadReplies();
+    };
+    d.append(m, b, x);
+    box.appendChild(d);
+  });
+}
+</script>
+</body>
+</html>

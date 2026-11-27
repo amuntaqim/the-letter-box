@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3b97e6">
+<title>হেমন্তিনীকে</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='9' width='16' height='20' rx='3' fill='%23b8352b'/%3E%3Cpath d='M8 12a8 8 0 0 1 16 0z' fill='%23962a22'/%3E%3Crect x='11' y='16' width='10' height='4' rx='1' fill='%23401410'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #3a2a2a;
+    --ink-soft: #6b5656;
+    --red: #b8352b;
+    --red-deep: #962a22;
+    --paper: rgba(255, 252, 246, 0.9);
+    --line: rgba(110, 140, 185, 0.38);
+    --sky: #3b97e6;
+    --lh: 2.5rem;
+
+    /* home illustration: phone (941 x 1672) */
+    --r: 0.5628;
+    --pb-left: 23.6%;
+    --pb-top: 76.4%;
+    --pb-width: 18.3%;
+    --pb-height: 23.6%;
+  }
+
+  @media (min-aspect-ratio: 1/1) {
+    :root {
+      /* home illustration: desktop (1672 x 941) */
+      --r: 1.7769;
+      --pb-left: 22.4%;
+      --pb-top: 64.8%;
+      --pb-width: 11.9%;
+      --pb-height: 35.2%;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: "Noto Serif Bengali", "Noto Serif", serif;
+    color: var(--ink);
+    background: var(--sky);
+  }
+
+  button, input, textarea { font: inherit; color: inherit; }
+
+  [hidden] { display: none !important; }
+
+  /* ---------- Home ---------- */
+  #home {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .stage {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max(100vw, calc(100dvh * var(--r)));
+    aspect-ratio: calc(var(--r));
+  }
+
+  .stage img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .title {
+    position: absolute;
+    top: max(9dvh, env(safe-area-inset-top, 0px));
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: 700;
+    font-size: clamp(2.6rem, 9vw, 5.6rem);
+    line-height: 1.3;
+    color: #fff;
+    text-shadow: 0 2px 24px rgba(20, 70, 140, 0.55), 0 1px 3px rgba(20, 70, 140, 0.4);
+    pointer-events: none;
+    animation: rise 1.1s ease-out both;
+  }
+
+  .postbox {
+    position: absolute;
+    left: var(--pb-left);
+    top: var(--pb-top);
+    width: var(--pb-width);
+    height: var(--pb-height);
+    border: 0;
+    background: none;
+    border-radius: 42% 42% 4% 4% / 14% 14% 4% 4%;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
+
+  .postbox::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8);
+    animation: glow 3.4s ease-out infinite;
+  }
+
+  .postbox::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(255, 255, 255, 0);
+    transition: background 0.25s ease;
+  }
+
+  .postbox:hover::after,
+  .postbox:focus-visible::after { background: rgba(255, 255, 255, 0.14); }
+  .postbox:active::after { background: rgba(255, 255, 255, 0.26); }
+  .postbox:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+  @keyframes glow {
+    0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8); }
+    70%  { box-shadow: 0 0 0 clamp(12px, 2.8vmin, 28px) rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Writing room ---------- */
+  #room {
+    min-height: 100dvh;
+    background: url("paper.webp") center top / cover fixed, #cfe3f6;
+    padding: max(14px, env(safe-area-inset-top, 0px)) 14px max(24px, env(safe-area-inset-bottom, 0px));
+    animation: fade 0.5s ease both;
+  }
+
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  .bar {
+    max-width: 760px;
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .chip {
+    border: 0;
+    cursor: pointer;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 1px 8px rgba(40, 80, 130, 0.18);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .chip:hover { background: #fff; transform: translateY(-1px); }
+  .chip:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  .chip.red {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .chip.red:hover { background: var(--red-deep); }
+
+  .bar .group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .sheet {
+    max-width: 760px;
+    margin: 0 auto;
+    background: var(--paper);
+    border-radius: 6px;
+    box-shadow: 0 10px 40px rgba(30, 70, 120, 0.22);
+    padding: clamp(20px, 5vw, 44px) clamp(18px, 5vw, 48px) clamp(18px, 4vw, 30px);
+  }
+
+  .date {
+    text-align: right;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+
+  .field {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    outline: none;
+  }
+
+  .salutation {
+    font-size: 1.25rem;
+    font-weight: 500;
+    padding: 4px 0 10px;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .body {
+    display: block;
+    min-height: 52dvh;
+    resize: none;
+    overflow: hidden;
+    font-size: 1.1rem;
+    line-height: var(--lh);
+    padding: 0;
+    background-image: linear-gradient(transparent calc(var(--lh) - 1px), var(--line) 0);
+    background-size: 100% var(--lh);
+    background-attachment: local;
+  }
+
+  .sign {
+    margin-top: 12px;
+    text-align: right;
+    font-size: 1.1rem;
+    padding: 6px 0;
+    border-top: 1px dashed var(--line);
+  }
+
+  ::placeholder { color: rgba(90, 70, 70, 0.42); }
+
+  .foot {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .count { font-size: 0.85rem; color: var(--ink-soft); }
+
+  .foot .group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .foot .chip { background: rgba(120, 150, 190, 0.16); box-shadow: none; }
+  .foot .chip:hover { background: rgba(120, 150, 190, 0.28); }
+  .foot .chip.red { background: var(--red); }
+  .foot .chip.red:hover { background: var(--red-deep); }
+
+  /* ---------- Saved letters drawer ---------- */
+  .scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(25, 50, 90, 0.35);
+    z-index: 20;
+    animation: fade 0.25s ease both;
+  }
+
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(420px, 92vw);
+    background: #fffaf2;
+    z-index: 21;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -10px 0 40px rgba(25, 50, 90, 0.25);
+    animation: slide 0.3s ease both;
+  }
+
+  @keyframes slide { from { transform: translateX(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  .drawer header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: max(16px, env(safe-area-inset-top, 0px)) 18px 12px;
+    border-bottom: 1px solid rgba(110, 140, 185, 0.25);
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+
+  .drawer ul {
+    list-style: none;
+    overflow-y: auto;
+    padding: 10px 12px 24px;
+    flex: 1;
+  }
+
+  .drawer li {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    margin-bottom: 10px;
+  }
+
+  .item {
+    flex: 1;
+    text-align: left;
+    border: 1px solid rgba(110, 140, 185, 0.28);
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    min-width: 0;
+  }
+
+  .item:hover { border-color: var(--red); }
+  .item small { display: block; color: var(--ink-soft); font-size: 0.78rem; margin-bottom: 2px; }
+  .item span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.95rem;
+  }
+
+  .trash {
+    border: 0;
+    background: rgba(184, 53, 43, 0.1);
+    color: var(--red);
+    border-radius: 8px;
+    width: 42px;
+    cursor: pointer;
+    font-size: 1.1rem;
+  }
+
+  .trash:hover { background: rgba(184, 53, 43, 0.2); }
+
+  .empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Small toast ---------- */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: max(24px, env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    background: rgba(40, 30, 30, 0.88);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    z-index: 30;
+    animation: fade 0.2s ease both;
+  }
+
+  /* ---------- Print (letter only) ---------- */
+  #printView { display: none; }
+
+  @media print {
+    html, body { background: #fff; height: auto; }
+    #home, #room, .scrim, .drawer, .toast { display: none !important; }
+    #printView {
+      display: block;
+      padding: 18mm 20mm;
+      font-size: 13pt;
+      line-height: 2;
+      color: #000;
+    }
+    #printView .p-date { text-align: right; }
+    #printView .p-sal { font-weight: 500; margin-top: 8mm; }
+    #printView .p-body { white-space: pre-wrap; margin-top: 4mm; }
+    #printView .p-sign { text-align: right; margin-top: 10mm; white-space: pre-wrap; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .postbox::before, .title, #room, .drawer, .scrim, .toast { animation: none; }
+  }
+
+  .bar { flex-wrap: wrap; }
+  .chip .dot {
+    display: inline-block; min-width: 1.3em; padding: 0 6px; margin-left: 4px;
+    border-radius: 999px; background: #fff; color: var(--red); font-size: 0.8rem; line-height: 1.5;
+  }
+  .meta { font-size: 0.82rem; color: var(--red-deep); margin-bottom: 4px; min-height: 1.2em; }
+  .sheet.readonly .field { cursor: default; }
+  .sheet.readonly .body { background-image: linear-gradient(transparent calc(var(--lh) - 1px), var(--line) 0); }
+
+  .tabs { display: flex; gap: 8px; padding: 10px 12px 0; }
+  .tabs .chip { flex: 1; text-align: center; background: rgba(120, 150, 190, 0.16); box-shadow: none; }
+  .tabs .chip.on { background: var(--red); color: #fff; }
+  .item .tag {
+    display: inline-block; font-size: 0.72rem; padding: 0 8px; border-radius: 999px; margin-left: 6px;
+    background: rgba(120, 150, 190, 0.2); color: var(--ink-soft);
+  }
+  .item .tag.new { background: var(--red); color: #fff; }
+
+  .login-scrim {
+    position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center;
+    background: rgba(25, 60, 110, 0.5); padding: 20px; animation: fade 0.25s ease both;
+  }
+  .login {
+    width: min(360px, 100%); background: #fffaf2; border-radius: 12px; padding: 26px 22px 22px;
+    box-shadow: 0 20px 60px rgba(10, 30, 70, 0.4); text-align: center;
+  }
+  .login h2 { font-size: 1.3rem; margin-bottom: 16px; }
+  .login input {
+    width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid rgba(110, 140, 185, 0.5);
+    background: #fff; text-align: center; font-size: 1.05rem; outline: none;
+  }
+  .login input:focus { border-color: var(--red); }
+  .login .err { color: var(--red); font-size: 0.85rem; min-height: 1.3em; margin: 8px 0 4px; }
+  .login .row { display: flex; gap: 8px; justify-content: center; margin-top: 6px; }
+  .login .chip { background: rgba(120, 150, 190, 0.16); box-shadow: none; }
+  .login .chip.red { background: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<section id="home">
+  <div class="stage">
+    <picture>
+      <source media="(min-aspect-ratio: 1/1)" srcset="desktop.webp" width="1672" height="941">
+      <img src="mobile.webp" width="941" height="1672" alt="" fetchpriority="high" draggable="false">
+    </picture>
+    <button class="postbox" id="open" aria-label="চিঠি লিখুন"></button>
+  </div>
+  <h1 class="title">হেমন্তিনীকে</h1>
+</section>
+
+<!-- ============ WRITING ROOM ============ -->
+<section id="room" hidden>
+  <div class="bar">
+    <button class="chip" id="back">← ফিরে যান</button>
+    <div class="group">
+      <button class="chip" id="new">নতুন চিঠি</button>
+      <button class="chip" id="mine">আমার চিঠি</button>
+      <button class="chip red" id="theirs">তোমার চিঠি <span class="dot" id="theirsDot" hidden></span></button>
+    </div>
+  </div>
+
+  <article class="sheet" id="sheet">
+    <div class="meta" id="meta"></div>
+    <div class="date" id="date"></div>
+    <input class="field salutation" id="sal" type="text" aria-label="সম্বোধন" autocomplete="off">
+    <textarea class="field body" id="body" placeholder="এখানে মনের কথা লিখুন…" aria-label="চিঠি" spellcheck="false"></textarea>
+    <input class="field sign" id="sign" type="text" placeholder="ইতি, …" aria-label="নাম" autocomplete="off">
+
+    <div class="foot">
+      <span class="count" id="count"></span>
+      <div class="group">
+        <button class="chip" id="copy">কপি</button>
+        <button class="chip" id="print">প্রিন্ট / PDF</button>
+        <button class="chip" id="share" hidden>শেয়ার</button>
+        <button class="chip" id="save">সংরক্ষণ</button>
+        <button class="chip red" id="send">পাঠান</button>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ LETTER LIST ============ -->
+<div id="drawerWrap" hidden>
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" role="dialog" aria-label="চিঠি">
+    <header>
+      <span id="drawerTitle">আমার চিঠি</span>
+      <span style="display:flex;gap:8px">
+        <button class="chip" id="logout">বেরিয়ে যান</button>
+        <button class="chip" id="closeDrawer">বন্ধ করুন</button>
+      </span>
+    </header>
+    <div class="tabs">
+      <button class="chip" id="tabMine">আমার চিঠি</button>
+      <button class="chip" id="tabTheirs">তোমার চিঠি</button>
+    </div>
+    <ul id="list"></ul>
+  </aside>
+</div>
+
+<!-- ============ PASSWORD ============ -->
+<div class="login-scrim" id="loginWrap" hidden>
+  <div class="login" role="dialog" aria-label="প্রবেশ">
+    <h2>পাসওয়ার্ড দিন</h2>
+    <input id="pw" type="password" autocomplete="current-password" aria-label="পাসওয়ার্ড">
+    <div class="err" id="pwErr"></div>
+    <div class="row">
+      <button class="chip" id="pwCancel">বাতিল</button>
+      <button class="chip red" id="pwGo">প্রবেশ করুন</button>
+    </div>
+  </div>
+</div>
+
+<!-- Printable copy -->
+<div id="printView" aria-hidden="true">
+  <div class="p-date" id="pDate"></div>
+  <div class="p-sal" id="pSal"></div>
+  <div class="p-body" id="pBody"></div>
+  <div class="p-sign" id="pSign"></div>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var home = $("home"), room = $("room");
+  var sal = $("sal"), body = $("body"), sign = $("sign");
+
+  var state = { role: null, letters: [], tab: "mine", id: null, readonly: false, status: "draft" };
+  var toastTimer = null, draftTimer = null, loginResolve = null, loginReject = null;
+
+  /* ---------- helpers ---------- */
+  function bn(n) { return String(n).replace(/\d/g, function (d) { return "০১২৩৪৫৬৭৮৯"[d]; }); }
+  function fmt(ts) {
+    try { return new Date(ts || Date.now()).toLocaleDateString("bn-BD", { day: "numeric", month: "long", year: "numeric" }); }
+    catch (e) { return ""; }
+  }
+  function defaultSal() { return state.role === "she" ? "প্রিয়," : "প্রিয় হেমন্তিনী,"; }
+  function draftKey() { return "hemontini:draft:" + state.role; }
+  function lget(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function lset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function ldel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+  function toast(msg) {
+    var old = document.querySelector(".toast");
+    if (old) old.remove();
+    var t = document.createElement("div");
+    t.className = "toast"; t.textContent = msg;
+    document.body.appendChild(t);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.remove(); }, 2400);
+  }
+
+  function api(path, opts) {
+    opts = opts || {};
+    opts.credentials = "same-origin";
+    opts.headers = { "Content-Type": "application/json" };
+    return fetch(path, opts).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.status === 401 && path !== "/api/login") { var a = new Error("auth"); a.auth = true; throw a; }
+        if (!r.ok) { var e = new Error(j.error || "error"); e.code = j.error; e.status = r.status; throw e; }
+        return j;
+      });
+    });
+  }
+
+  function fail(e) {
+    if (e && e.auth) { state.role = null; toast("আবার প্রবেশ করুন"); askPassword().then(refresh).catch(function () {}); return; }
+    if (e && e.code === "storage") { toast("সংরক্ষণের জায়গা এখনও সংযুক্ত হয়নি"); return; }
+    toast("কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন");
+  }
+
+  /* ---------- login ---------- */
+  function askPassword() {
+    $("pw").value = ""; $("pwErr").textContent = "";
+    $("loginWrap").hidden = false;
+    setTimeout(function () { $("pw").focus(); }, 50);
+    return new Promise(function (res, rej) { loginResolve = res; loginReject = rej; });
+  }
+
+  function submitPassword() {
+    var pw = $("pw").value;
+    if (!pw) return;
+    $("pwGo").disabled = true;
+    api("/api/login", { method: "POST", body: JSON.stringify({ password: pw }) })
+      .then(function (j) {
+        state.role = j.role;
+        $("loginWrap").hidden = true;
+        if (loginResolve) loginResolve();
+        loginResolve = loginReject = null;
+      })
+      .catch(function (e) {
+        $("pwErr").textContent = e.status === 429 ? "অনেকবার চেষ্টা হয়েছে, একটু পরে আবার দেখুন" : "পাসওয়ার্ড মিলছে না";
+        $("pw").select();
+      })
+      .then(function () { $("pwGo").disabled = false; });
+  }
+
+  function ensureSession() {
+    return refresh().catch(function (e) {
+      if (e && e.auth) return askPassword().then(refresh);
+      throw e;
+    });
+  }
+
+  /* ---------- server data ---------- */
+  function refresh() {
+    return api("/api/letters").then(function (j) {
+      state.role = j.role;
+      state.letters = j.letters || [];
+      badges();
+      if (!$("drawerWrap").hidden) renderList();
+    });
+  }
+
+  function theirs() { return state.letters.filter(function (l) { return l.author !== state.role; }); }
+  function mine() { return state.letters.filter(function (l) { return l.author === state.role; }); }
+
+  function badges() {
+    var n = theirs().filter(function (l) { return !l.readAt; }).length;
+    $("theirsDot").hidden = !n;
+    $("theirsDot").textContent = bn(n);
+  }
+
+  /* ---------- editor ---------- */
+  function isEmpty() { return !body.value.trim(); }
+  function letterText() {
+    return [sal.value.trim(), "", body.value.trim(), "", sign.value.trim()].join("\n").replace(/\n{3,}/g, "\n\n").trim();
+  }
+
+  function grow() {
+    body.style.height = "auto";
+    body.style.height = Math.max(body.scrollHeight, Math.round(window.innerHeight * 0.52)) + "px";
+  }
+
+  function updateCount() {
+    var w = body.value.trim() ? body.value.trim().split(/\s+/).length : 0;
+    $("count").textContent = bn(w) + " শব্দ";
+  }
+
+  function lockEditor(lock, status) {
+    state.readonly = lock;
+    state.status = status || "draft";
+    sal.readOnly = body.readOnly = sign.readOnly = lock;
+    $("sheet").classList.toggle("readonly", lock);
+    $("save").hidden = lock;
+    $("save").textContent = state.status === "sent" ? "পরিবর্তন সংরক্ষণ" : "সংরক্ষণ";
+    $("send").hidden = lock || state.status === "sent";
+  }
+
+  function show(l, meta) {
+    sal.value = l.sal != null ? l.sal : defaultSal();
+    body.value = l.body || "";
+    sign.value = l.sign || "";
+    state.id = l.id || null;
+    $("date").textContent = fmt(l.sentAt || l.ts);
+    $("meta").textContent = meta || "";
+    grow(); updateCount();
+  }
+
+  function blank() {
+    show({}, "");
+    lockEditor(false);
+    ldel(draftKey());
+  }
+
+  function saveLocalDraft() {
+    if (state.readonly || state.status === "sent" || !state.role) return;
+    lset(draftKey(), { id: state.id, sal: sal.value, body: body.value, sign: sign.value });
+  }
+
+  function onType() {
+    grow(); updateCount();
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(saveLocalDraft, 350);
+  }
+
+  function openLetter(l) {
+    var mineL = l.author === state.role;
+    var edited = l.editedAt ? " · সম্পাদিত" : "";
+    if (mineL) {
+      show(l, l.status === "draft" ? "খসড়া" : "পাঠানো হয়েছে" + edited);
+      lockEditor(false, l.status);
+    } else {
+      show(l, "তোমার জন্য চিঠি" + edited);
+      lockEditor(true, "sent");
+      if (!mineL && !l.readAt) {
+        api("/api/letters", { method: "POST", body: JSON.stringify({ action: "read", id: l.id }) })
+          .then(refresh).catch(function () {});
+      }
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function persist(send) {
+    if (isEmpty()) { toast("আগে কিছু লিখুন"); return Promise.resolve(); }
+    if (send && !confirm("চিঠিটি পাঠাবেন? পাঠানোর পর আর বদলানো যাবে না।")) return Promise.resolve();
+    var payload = { id: state.id, sal: sal.value, body: body.value, sign: sign.value, send: !!send };
+    return api("/api/letters", { method: "POST", body: JSON.stringify(payload) })
+      .then(function (j) {
+        state.id = j.letter.id;
+        if (send) { ldel(draftKey()); toast("চিঠি পাঠানো হয়েছে"); openLetter(j.letter); }
+        else if (state.status === "sent") { $("meta").textContent = "পাঠানো হয়েছে · সম্পাদিত"; toast("পরিবর্তন সংরক্ষিত হয়েছে"); }
+        else { saveLocalDraft(); $("meta").textContent = "খসড়া"; toast("খসড়া সংরক্ষিত হয়েছে"); }
+        return refresh();
+      })
+      .catch(fail);
+  }
+
+  function newLetter() {
+    var p = (!state.readonly && state.status !== "sent" && !isEmpty() && !state.id) ? persist(false) : Promise.resolve();
+    p.then(function () { blank(); body.focus(); });
+  }
+
+  /* ---------- list drawer ---------- */
+  function renderList() {
+    var ul = $("list");
+    ul.innerHTML = "";
+    var isMine = state.tab === "mine";
+    $("tabMine").classList.toggle("on", isMine);
+    $("tabTheirs").classList.toggle("on", !isMine);
+    $("drawerTitle").textContent = isMine ? "আমার চিঠি" : "তোমার চিঠি";
+    var items = isMine ? mine() : theirs();
+
+    if (!items.length) {
+      var e = document.createElement("li");
+      e.className = "empty";
+      e.textContent = isMine ? "এখনও কোনো চিঠি লেখা হয়নি।" : "এখনও কোনো চিঠি আসেনি।";
+      ul.appendChild(e);
+      return;
+    }
+
+    items.forEach(function (l) {
+      var li = document.createElement("li");
+      var open = document.createElement("button");
+      open.className = "item";
+      var d = document.createElement("small");
+      d.textContent = fmt(l.sentAt || l.ts);
+      var tag = document.createElement("i");
+      tag.className = "tag"; tag.style.fontStyle = "normal";
+      if (isMine) tag.textContent = l.status === "draft" ? "খসড়া" : (l.editedAt ? "পাঠানো · সম্পাদিত" : "পাঠানো হয়েছে");
+      else if (!l.readAt) { tag.textContent = "নতুন"; tag.className += " new"; }
+      else if (l.editedAt) { tag.textContent = "সম্পাদিত"; }
+      if (tag.textContent) d.appendChild(tag);
+      var s = document.createElement("span");
+      s.textContent = (l.body || "").split("\n")[0];
+      open.appendChild(d); open.appendChild(s);
+      open.addEventListener("click", function () { openLetter(l); closeDrawer(); });
+      li.appendChild(open);
+
+      if (isMine && l.status === "draft") {
+        var del = document.createElement("button");
+        del.className = "trash"; del.textContent = "✕"; del.setAttribute("aria-label", "মুছে ফেলুন");
+        del.addEventListener("click", function () {
+          if (!confirm("এই খসড়াটি মুছে ফেলবেন?")) return;
+          api("/api/letters?id=" + encodeURIComponent(l.id), { method: "DELETE" })
+            .then(function () { if (state.id === l.id) blank(); return refresh(); })
+            .catch(fail);
+        });
+        li.appendChild(del);
+      }
+      ul.appendChild(li);
+    });
+  }
+
+  function openDrawer(tab) {
+    state.tab = tab;
+    $("drawerWrap").hidden = false;
+    renderList();
+    refresh().catch(function () {});
+  }
+  function closeDrawer() { $("drawerWrap").hidden = true; }
+
+  /* ---------- actions ---------- */
+  function copy() {
+    if (isEmpty()) { toast("আগে কিছু লিখুন"); return; }
+    var text = letterText();
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("কপি হয়েছে"); } catch (e) { toast("কপি করা গেল না"); }
+      ta.remove();
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { toast("কপি হয়েছে"); }, fallback);
+    } else fallback();
+  }
+
+  function printLetter() {
+    if (isEmpty()) { toast("আগে কিছু লিখুন"); return; }
+    $("pDate").textContent = $("date").textContent;
+    $("pSal").textContent = sal.value;
+    $("pBody").textContent = body.value;
+    $("pSign").textContent = sign.value;
+    window.print();
+  }
+
+  function logout() {
+    api("/api/logout", { method: "POST" }).catch(function () {}).then(function () {
+      state.role = null; state.letters = [];
+      closeDrawer(); sal.value = body.value = sign.value = ""; state.id = null;
+      go("");
+    });
+  }
+
+  /* ---------- views ---------- */
+  function route() {
+    var writing = location.hash === "#write" && !!state.role;
+    home.hidden = writing;
+    room.hidden = !writing;
+    if (writing) { window.scrollTo(0, 0); grow(); }
+  }
+
+  function go(hash) {
+    if (hash) { location.hash = hash; route(); }
+    else { history.pushState("", document.title, location.pathname + location.search); route(); }
+  }
+
+  function enterRoom() {
+    var d = lget(draftKey());
+    if (d && d.body && !state.readonly && state.status !== "sent") {
+      show({ id: d.id, sal: d.sal, body: d.body, sign: d.sign }, d.id ? "খসড়া" : "");
+    } else if (!state.id && !body.value) {
+      show({}, "");
+    }
+    if (!state.readonly) lockEditor(false);
+    go("#write");
+  }
+
+  /* ---------- wire up ---------- */
+  $("open").addEventListener("click", function () {
+    ensureSession().then(enterRoom).catch(function (e) { if (e && e.code) fail(e); });
+  });
+  $("back").addEventListener("click", function () { saveLocalDraft(); go(""); });
+  $("new").addEventListener("click", newLetter);
+  $("mine").addEventListener("click", function () { openDrawer("mine"); });
+  $("theirs").addEventListener("click", function () { openDrawer("theirs"); });
+  $("tabMine").addEventListener("click", function () { openDrawer("mine"); });
+  $("tabTheirs").addEventListener("click", function () { openDrawer("theirs"); });
+  $("closeDrawer").addEventListener("click", closeDrawer);
+  $("scrim").addEventListener("click", closeDrawer);
+  $("logout").addEventListener("click", logout);
+  $("save").addEventListener("click", function () { persist(false); });
+  $("send").addEventListener("click", function () { persist(true); });
+  $("copy").addEventListener("click", copy);
+  $("print").addEventListener("click", printLetter);
+  if (navigator.share) {
+    $("share").hidden = false;
+    $("share").addEventListener("click", function () {
+      if (isEmpty()) { toast("আগে কিছু লিখুন"); return; }
+      navigator.share({ title: "চিঠি", text: letterText() }).catch(function () {});
+    });
+  }
+
+  $("pwGo").addEventListener("click", submitPassword);
+  $("pw").addEventListener("keydown", function (e) { if (e.key === "Enter") submitPassword(); });
+  $("pwCancel").addEventListener("click", function () {
+    $("loginWrap").hidden = true;
+    if (loginReject) loginReject(new Error("cancel"));
+    loginResolve = loginReject = null;
+  });
+
+  [sal, body, sign].forEach(function (el) { el.addEventListener("input", onType); });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !$("drawerWrap").hidden) closeDrawer();
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s" && !room.hidden && !state.readonly) {
+      e.preventDefault(); persist(false);
+    }
+  });
+
+  window.addEventListener("hashchange", route);
+  window.addEventListener("resize", grow);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(grow);
+
+  // keep both sides in sync
+  setInterval(function () { if (state.role && !document.hidden) refresh().catch(function () {}); }, 30000);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && state.role) refresh().catch(function () {});
+  });
+
+  /* ---------- start ---------- */
+  refresh().then(function () {
+    if (location.hash === "#write") enterRoom(); else route();
+  }).catch(function () {
+    if (location.hash === "#write") history.replaceState("", document.title, location.pathname + location.search);
+    route();
+  });
+})();
+</script>
+</body>
+</html>
